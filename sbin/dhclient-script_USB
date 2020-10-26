@@ -1,0 +1,110 @@
+#!/bin/sh
+
+# Explicitly set the PATH to that of ENV_SUPATH in /etc/login.defs and unset
+# various other variables. We need to do this so /sbin/dhclient cannot abuse
+# the environment to escape AppArmor confinement via this script
+# (LP: #1045986). This can be removed once AppArmor supports environment
+# filtering (LP: #1045985)
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export ENV=
+export BASH_ENV=
+export CDPATH=
+export GLOBIGNORE=
+export BASH_XTRACEFD=
+
+# dhclient-script for Linux. Dan Halbert, March, 1997.
+# Updated for Linux 2.[12] by Brian J. Murrell, January 1999.
+# Modified for Debian.  Matt Zimmerman and Eloy Paris, December 2003
+# Modified to remove useless tests for antiquated kernel versions that
+# this doesn't even work with anyway, and introduces a dependency on /usr
+# being mounted, which causes cosmetic errors on hosts that NFS mount /usr
+# Andrew Pollock, February 2005
+# Modified to work on point-to-point links. Andrew Pollock, June 2005
+# Modified to support passing the parameters called with to the hooks. Andrew Pollock, November 2005
+
+# The alias handling in here probably still sucks. -mdz
+
+#echo ""
+#echo "MY:" $reason "->" $old_ip6_prefix "->" $new_ip6_prefix
+#echo "MY:" $reason "->" $new_ip_address "->" $router
+#echo ""
+
+case $reason in BOUND6|REBIND6|RENEW6)
+	#if [ $(ip -6 addr show dev eth0 scope global | wc -l) -gt 0 ]; then
+		#echo "REMOVE_6_OLD"
+
+		#ip -6 addr flush dev eth0 scope global
+	#fi
+
+	#------------------------------------------------------------------
+	#if [ $new_ip6_address ]; then
+		#echo ""
+		#echo "IA_6_ADDR:" $new_ip6_address
+		#echo ""
+
+		#ip -6 addr add $new_ip6_address dev eth0 scope global
+	#fi
+
+	if [ -z $new_ip6_prefix ]; then
+		echo ""
+		echo "IA_6_ADDR:" $new_ip6_address
+		echo ""
+
+		exit 0
+	fi
+
+	#------------------------------------------------------------------
+	echo ""
+	echo "IA_PREFIX:" $reason":" $old_ip6_prefix "->" $old_preferred_life "->" $new_ip6_prefix "->" $new_preferred_life
+	echo ""
+
+	if [ $old_preferred_life ] && [ $old_preferred_life -eq "0" ]; then
+		echo "DEPRECATED"
+
+		rm /var/lib/dhcp/dhclient6.leases
+
+		exit 0
+	fi
+
+	#------------------------------------------------------------------
+	if [ $(ip -6 addr show dev eth0 scope global | wc -l) -gt 0 ]; then
+		echo "REMOVE_OLD"
+
+		ip -6 addr flush dev eth0 scope global
+	fi
+
+	#------------------------------------------------------------------
+	#echo "ASSIGN_NEW"
+
+	myPrefix="$((`expr length $new_ip6_prefix` - 3))"
+
+	myPrefix="`expr substr $new_ip6_prefix 1 $myPrefix`"
+
+	IFS=
+
+	#raDVD=`cat /etc/radvd.conf | sed "s/2a02:[^\/]*/$myPrefix/" | sed -z "s/br0\n/eth1\n/"`
+	raDVD=`cat /etc/radvd.conf | sed "s/2a02:[^\/]*/$myPrefix/"`
+
+	printf $raDVD > /etc/radvd.conf
+;;
+BOUND|REBIND|RENEW|REBOOT)
+	if [ $(ip -4 addr show dev eth0 scope global | wc -l) -gt 0 ]; then
+		echo "REMOVE_4_OLD"
+
+		ip -4 addr flush dev eth0 scope global
+	fi
+
+	#------------------------------------------------------------------ $interface + $if_metric
+	if [ $new_ip_address ]; then
+		echo ""
+		echo "IA_4_ADDR:" $new_ip_address "->" $new_routers
+		echo ""
+
+		ip addr add $new_ip_address/$new_subnet_mask broadcast $new_broadcast_address dev eth0
+
+		ip route add default via $new_routers dev eth0
+	fi
+;;
+esac
+
+exit 0
