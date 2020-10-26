@@ -1,0 +1,152 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# https://manpages.debian.org/unstable/ifupdown/interfaces.5.en.html
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+###############################################################################
+#auto br0
+#iface br0 inet static
+#bridge_ports eth0 eth2
+#address 192.168.0.11/24
+#gateway 192.168.0.2
+
+auto br0
+iface br0 inet manual
+#post-up brctl addbr br0
+#post-up brctl addif br0 eth0 eth2
+
+post-up ip link add name br0 type bridge
+
+post-up ip link set eth0 master br0
+post-up ip link set eth2 master br0
+
+post-up ip link set dev eth0 up
+post-up ip link set dev eth2 up
+post-up ip link set br0 up
+
+# post-up ip addr add 192.168.0.11/255.255.255.0 broadcast 192.168.0.255 dev br0
+# post-up ip link set dev br0 up
+post-up ifconfig br0 192.168.0.11 netmask 255.255.255.0 up
+
+# post-up route add default gw 192.168.0.2 dev br0
+# post-up ip route add default via 192.168.0.2 dev br0 onlink
+post-up ip route add default via 192.168.0.2 dev br0
+
+############################################################################### ok
+#auto eth0
+#iface eth0 inet static
+#address 192.168.0.12/24
+
+#------------------------------------------------------------------------------
+#gateway 192.168.0.2
+#gateway 192.168.0.13
+
+#dns-nameservers 8.8.8.8 8.8.4.4 80.69.96.12 81.210.129.4
+
+############################################################################### ok
+auto eth1
+#iface eth1 inet dhcp
+
+#iface eth1 inet static
+#address 192.168.0.15/24
+
+#iface eth1 inet6 dhcp
+#accept_ra 1
+#autoconf 0 # Perform stateless autoconfiguration
+#dns-nameservers 2001:4860:4860::8888 2001:4860:4860::8844 2a02:908:2:a::1 2a02:908:2:b::1
+
+#post-up dhclient -1 -6 -P -v eth1 # -v -1 --prefix-len-hint 59
+
+#post-up pkill dhclient
+#post-up rm /var/lib/dhcp/dhclient6.eth1.leases
+#post-up rm /var/lib/dhcp/dhclient6.leases
+
+#post-up systemctl start radvd.service
+#post-up radvd --logmethod none
+
+#post-up ifconfig eth1 down
+
+#pre-down systemctl stop radvd.service
+#pre-down ifconfig eth1 up
+
+#gateway fe80::c15:e5ec:388e:89d6
+#post-up ip -6 route add default via fe80::201:5cff:fe7b:f046 dev eth1
+
+###############################################################################
+iface eth1 inet6 manual
+post-up ip link set dev eth1 up
+post-up /lib/ifupdown/wait-for-ll6.sh
+post-up dhclient -1 -6 -I -v -pf /run/dhclient6.eth1.pid -lf /var/lib/dhcp/dhclient6.eth1.leases eth1
+post-up dhclient -1 -6 -P -v -pf /run/dhclient6.prefix.pid eth1
+
+post-up pkill dhclient
+#post-up dhclient -6 -x -v -pf /run/dhclient6.eth1.pid
+#post-up dhclient -6 -x -v -pf /run/dhclient6.prefix.pid
+
+post-up radvd --logmethod none
+
+pre-down start-stop-daemon --oknodo --stop --pidfile /var/run/radvd.pid --exec /usr/sbin/radvd
+
+#post-up ping6 -c 1 -I eth1 2001:4860:4860::8844
+
+#post-up ifconfig eth1 down
+#post-up ip link set dev eth1 down
+
+#ifconfig eth1 hw ether 02:01:02:03:04:08
+#post-up ip ip link set eth1 address 02:01:02:03:04:08
+
+###############################################################################
+#iface eth0 inet6 manual
+#accept_ra 2
+#dns-nameservers 2001:4860:4860::8888 2001:4860:4860::8844 2a02:908:2:a::1 2a02:908:2:b::1
+#gateway fe80::c15:e5ec:388e:89d6
+
+#iface eth0 inet6 manual
+#gateway 192.168.0.2
+#ifmetric eth0 2
+
+#post-up ip -6 addr flush dev eth0
+
+###############################################################################
+#auto eth2
+#iface eth2 inet manual
+
+#------------------------------------------------------------------------------
+#iface eth2 inet static
+#address 192.168.0.15/24
+#gateway 192.168.0.2
+
+###############################################################################
+#iface eth1 inet6 manual
+
+#gateway fe80::201:5cff:fe7b:f046
+#ifmetric eth1 1
+
+# hwaddress ???
+# autoconf 1
+
+#request_prefix 1
+#pre-up
+
+# post-up pkill dhclient
+
+#post-up dhclient -1 -4
+#post-up rm /var/lib/dhcp/dhclient*
+
+#post-up dhclient -1 -6
+#post-up rm /var/lib/dhcp/dhclient*
+
+############################################################################### !!!
+# iface eth1 inet6 auto # SLAAC
+#pre-up modprobe ipv6
+
+#iface eth0 inet6 static
+#address fe80::20c:29ff:fed8:73fb
+#netmask 64
+
