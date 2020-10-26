@@ -1,0 +1,46 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# https://manpages.debian.org/unstable/ifupdown/interfaces.5.en.html
+
+source /etc/network/interfaces.d/*
+
+############################################################################### loopback
+auto lo
+iface lo inet loopback
+pre-up modprobe r8168
+pre-up modprobe r8169
+
+############################################################################### eth0
+auto eth0
+iface eth0 inet manual
+
+post-up ip link set dev eth0 up
+
+post-up dhclient -1 -4 -v eth0
+
+#------------------------------------------------------------------------------
+iface eth0 inet6 manual
+
+post-up /lib/ifupdown/wait-for-ll6.sh
+
+post-up dhclient -1 -6 -v eth0
+post-up dhclient -1 -6 -P -v eth0
+
+post-up pkill dhclient
+
+post-up radvd --logmethod none
+
+post-up iptables --verbose --table nat --append POSTROUTING --out-interface eth0 --jump MASQUERADE
+
+pre-down start-stop-daemon --oknodo --stop --pidfile /var/run/radvd.pid --exec /usr/sbin/radvd
+
+############################################################################### eth1
+auto eth1
+iface eth1 inet manual
+
+post-up ifconfig eth1 192.168.0.2 netmask 255.255.255.0 up
+
+############################################################################### eth2
+post-up ip link add name eth2 type dummy
+post-up ifconfig eth2 192.168.0.11 netmask 255.255.255.0 up
