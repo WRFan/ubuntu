@@ -118,7 +118,7 @@ Running Ubuntu in VMWare Workstation can be problematic due to several problems:
 
 VMWare Tools by VMWare themselves are not working properly. Tools provided by Ubuntu:
 
-	https://help.ubuntu.com/community/VMware/Tools
+https://help.ubuntu.com/community/VMware/Tools
 
 are working, but have limited functionality.
 
@@ -198,7 +198,7 @@ Now look at:
 
 Microsoft can't even get their own damn extensions right, since ".ics" actually points to "Outlook.File.ics.15" in registry. is this file an Outlook file? Damn stupidity all over!
 
-So I am using dhclient to request the prefix. Now, there's been many lamentations about dhclient, and in fact, probably any other dhcp client out there is better suited for requesting IPs (except the MS dhcp client, lol), but it all depends on your ISP, and as far as I am concerned, dhclient gets it job done satisfactorily.
+So I am using dhclient to request the prefix. Now, there's been many lamentations about dhclient, and in fact, probably any other dhcp client out there is better suited for requesting IPs (except for the MS dhcp client, lol), but it all depends on your ISP, and as far as I am concerned, dhclient gets it job done satisfactorily.
 
 Now, there's no communication whatsoever between dhclient and the actual SLAAC-er (using radvd), so you have to make sure yourself the prefix attained by dhclient is actually passed to radvd. Depending on linux distro used, this whole process varies, so finding info on the net is pretty much impossible. So again, I am talking about Ubuntu 16 server edition! Keeping this in mind, let's go over the individual steps:
 
@@ -226,7 +226,7 @@ Such as? "ICS", you'll say. Again, ICS causes problems all over, plus, it's comp
 
 Apart from ICS, there are a couple of NAT programmes that claim to be capable to provide NAT on Windows, but they all failed miserably when tested. I'll just name Wingate, now that one is simply pathetic, eats up your CPU by hammering senseless requests to the system and doesn't NAT anything.
 
-Other than that, there's WinPkFilter, which looked pretty good to me first, so I actually compiled a binary, which was supposed to auto-run on Windows boot initialising NAT through the WinPkFilter driver. It seemed to be working all right, but when accessing certain ipv4 addresses (don't remember exactly which ones, pinging local network addresses or something), the driver was getting into an eternal loop. I was first thinking I made a mistake while writing the code, but the small NAT programme supplied with WinPkFilter exhibits the same behaviour. All these nonsense made the Windows tcpip stack completely unstable, it was the first time since the installation of Win10 I was actually forced to use the Reset button on my computer. Now killing Win10, which is incredibly stable, is a great achievement, heads up, WinPkFilter! But personally, I must say, I don't like the idea of instability, so WinPkFilter flew right into the Recycle Bin. As did all other NAT programmes I tested... including ICS (great work, dism!).So back to VMWare NAT.
+Other than that, there's WinPkFilter, which looked pretty good to me first, so I actually compiled a binary, which was supposed to auto-run on Windows boot initialising NAT through the WinPkFilter driver. It seemed to be working all right, but when accessing certain ipv4 addresses (don't remember exactly which ones, pinging local network addresses or something), the driver was getting into an eternal loop. I was first thinking I made a mistake while writing the code, but the small NAT programme supplied with WinPkFilter exhibits the same behaviour. All these nonsense made the Windows tcpip stack completely unstable, it was the first time since the installation of Win10 I was actually forced to use the Reset button on my computer. Now killing Win10, which is incredibly stable, is a great achievement, heads up, WinPkFilter! But personally, I must say, I don't like the idea of instability, so WinPkFilter flew right into the Recycle Bin. As did all other NAT programmes I tested... including ICS (great work, dism!). So back to VMWare NAT.
 
 As you can see, "interfaces" bridges "eth0" (bridged to the second real network adapter, which is connected to the network, but is NOT the one talking to the cable modem) and "eth2" (the VMWare NAT adapter). This makes the VMWare NAT gateway accessible to the entire network, not just the virtual guest systems.
 
@@ -362,7 +362,7 @@ ISP:
 
 Look at this pathetic dhclient! It's told Preferred lifetime until deprecation is a **week**, yet it stubbornly requests 2 damn minutes! Thank you, dear ISP, for not listening to this idiotic client! Now if you figure out how to set "Preferred lifetime" on the UBUNTU (Ubuntu! Not Fedora or something!) version of this programme, add a topic to:
 
-	https://github.com/WRFan/ubuntu/issues
+https://github.com/WRFan/ubuntu/issues
 
 Personally, I've given up on communicating with this programme, it doesn't listen to me and just does what it wants. Fortunately, my needs are satisfied despite all these problems, but I've heard people whining about rfc3442-classless-static-routes (what's that?) not being handled correctly by dhclient, overall everybody agrees this client is shitty.
 
@@ -397,6 +397,12 @@ https://github.com/WRFan/ubuntu/blob/main/etc/radvd.conf
 So we create a template on Ubuntu, then tell dhclient to update the prefix inside "radvd.conf" whenever it acquires one. Again, check:
 
 https://github.com/WRFan/ubuntu/blob/main/sbin/dhclient-script
+
+Btw, my "radvd.conf" states:
+
+	AdvPreferredLifetime 30
+
+So I set the "preferred lifetime" of the SLAAC-ed prefix to 30 seconds, because if I disable the router (for whatever reason), Windows must realise it as quickly as possible and deprecate the prefix. Sure, there's an option in radvd to send a "bye bye" on shutdown, but I sometimes just shut down the virtual machine itself, so radvd is just purged from memory, so sends nothing.
 
 Now we kill the dhclient (no need to have it sitting in memory, we've got our prefix for a week) and run radvd through /etc/network/interfaces .
 
