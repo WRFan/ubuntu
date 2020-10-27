@@ -376,7 +376,7 @@ https://github.com/WRFan/ubuntu/blob/main/sbin/dhclient-script
 
 	fi
 
-Another problem with dhclient is that it considers a prefix a valid one when re-binding, even if the ISP specifically tells it it's been deprecated. So here we go, I have waste my time to fix this pathetic programme's bugs:
+Another problem with dhclient is that it considers a prefix a valid one when re-binding, even if the ISP specifically tells it it's been deprecated. So here we go, I have to waste my time to fix this pathetic programme's bugs:
 
 	if [ $old_preferred_life ] && [ $old_preferred_life -eq "0" ]; then
 
@@ -760,7 +760,7 @@ Ubuntu:
 
 	Hahahahaha!
 
-Not funny. Besides, your stupid r8168 install package attempts to disable the r8169 driver if found. Github version does it too. What's that good for? Where am I going to find a r8169 driver. Github?
+Not funny. Besides, your stupid r8168 install package attempts to disable the r8169 driver if found. Github version does it too. What's that good for? Where am I going to find a r8169 driver? Github?
 
 Github:
 
@@ -770,7 +770,7 @@ Why is everybody laughing? The card does what it's supposed to do. It's supporte
 
 So I finally got it working, but then ubuntu messed up the module load order, I wrote about it above.
 
-Now let me point some other stuff that occurs to me. dmesg output is insufficient. I want to read everything that occurs during boot. That stuff is not written anywhere on Ubuntu. They will tell you to pause the boot sequence. Wonderful! By the time Ubuntu notices you hit the pause key, half the text is already gone. So you have to reboot all over, feverishly hitting the pause key, hoping you the boot process will pause at the right moment. Is this some kind of "Hit the keyboard as fast as you can" contest?
+Now let me point out some other stuff as it occurs to me. dmesg output is insufficient. I want to read everything that occurs during boot. That stuff is not written anywhere on Ubuntu. They will tell you to pause the boot sequence. Wonderful! By the time Ubuntu notices you hit the pause key, half the text is already gone. So you have to reboot all over, feverishly hitting the pause key, hoping the boot process will pause at the right moment. Is this some kind of "Hit the keyboard as fast as you can" contest?
 
 Disabled apparmor in Grub. Checking:
 
@@ -851,7 +851,7 @@ to:
 
 but there's a delay between hitting Escape and the actual line removal!
 
-While working with bash, I always type "cls" when switching from Windows to linux or darwin, then I switch back to Windows and type "clear" into cmd and powershell! That's it! Linux talks Micro-speak now!:
+While working with bash, I always type "cls" when switching from Windows to linux or darwin, then I switch back to Windows and type "clear" into cmd and powershell! That's it! Linux talks Micro-speak now (again, ".bashrc")!
 
 	alias clear='clear && echo -en "\e[3J"'
 
