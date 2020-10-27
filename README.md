@@ -430,7 +430,7 @@ As you can see, I am calling radvd with the parameter:
 
 otherwise it whines about some irrelevant crap and fills your harddisk with useless bullshit log messages. Now judging by itself, I'd say radvd is crappy, but hey, I learnt to expect the worst, so compared to bullshit I sometimes witness on Windows, Linux, Darwin, this one fares ok in relation to other drek.
 
-Now the question is, what network adapter we going to use as our actual router? Pages on the internet tell you to use a network adapter that by itself does NOT have access to the cable modem and use
+Now the question is, what network adapter are we going to use as our actual router? Pages on the internet tell you to use a network adapter that by itself does NOT have access to the cable modem and use
 
 	net.ipv6.conf.all.forwarding = 1
 
@@ -472,7 +472,7 @@ in radvd.conf, since my ISP advertises its own gateway/route at
 
 	Prf (Default Router Preference): Medium (0)
 
-Of course, now every other interface that can't communicate with the cable modem will still try to use the ISP gateway first, since they see the ISP RAs too. But since "eth0" is the only one getting a response from the cable modem (only one MAC can talk to it), they will drop the ISP gateway and use the one advertised by radvd. This whole stuff is extremely obscure, and there's very little valid information on the internet.
+Of course, now every other interface that can't communicate with the cable modem will still try to use the ISP gateway first, since they see the ISP RAs too. But since "eth0" is the only one getting a response from the cable modem (only one MAC can talk to it), they will drop the ISP gateway and use the one advertised by radvd.
 
 Concerning the network settings in "sysctl.conf", you can check them yourself on the internet. Still, I should mention a weirdness of linux. Concerning "net.ipv6.conf.XXX.forwarding" there's:
 
@@ -488,7 +488,7 @@ Now setting a variable to a specific value on a particular interface only instea
 
 	net.ipv6.conf.eth1.forwarding = 1
 
-Now reboot, BAMM! not working. No set it like this:
+Now reboot, BAMM! not working. Now set it like this:
 
 	net.ipv6.conf.all.forwarding = 1
 
@@ -716,7 +716,7 @@ Stackoverflow, superuser, anybody, HEEEEELP!
 
 But this is stupid! Well, still better than Grub. That's some consolation.
 
-So all right, it booted. Two days later, "boot sector failure". Re-wrote MBR to usb drive, rebooted, working again. A week later, boot sector failure. And so on. No idea what causes this. Do I have to re-write the MBR every time I modify the ext4 partition of the usb drive? Syslinux?
+So all right, it booted. Two days later, "boot sector failure". Re-wrote MBR to usb drive, rebooted, working again. A week later, boot sector failure. And so on. No idea what causes this. Do I have to re-write the MBR every time I modify the ext4 partition of the usb drive? Or is it the changes to the partition syslinux resides on that causes this? Syslinux?
 
 	BLAAAAAAAAAAAAAAAAA!
 
@@ -750,7 +750,7 @@ Ubuntu, a compiled package of the newest version, please?
 
 So I checked with Debian, and they are actually caring about their users. As I said above, they update their packages more frequently than the Ubuntu lazybones.
 
-Now some words on hardware support in linux. I already spoke about the wonderful graphics support on Linux. Now let's talk about Realtek drivers. But first, recall the last decade of the 20th century. The dinosaurs were still walking the earth. Dos, Windows 3.1, then Windows 95! Win 98! Wonderful systems lacking hardware support for anything! No drivers! You need drivers? Push a floppy into the floppy drive! Install the driver! Enjoy a bluescreen! Then! Revelation! WinXP! System providing drivers for everything! No need for floppies! No need to download drivers! Everything provided by Microsoft! Then! Windows 10! Even better driver support! Well, my Adaptec SCSI controller driver not there, but that's irrelevant! Maybe Microsoft hates Adaptec. Yet otherwise, everything's there.
+Now some words on hardware support in linux. I already spoke about the wonderful graphics support on Linux. Now let's talk about Realtek drivers. But first, recall the last decade of the 20th century. The dinosaurs were still walking the earth. Dos, Windows 3.1, then Windows 95! Win 98! Wonderful systems lacking hardware support for anything! No drivers! You need drivers? Push a floppy into the floppy drive! Install the driver! Enjoy a bluescreen! Then! Revelation! WinXP! System providing drivers for everything! No need for floppies! No need to download drivers! Everything provided by Microsoft! Then! Windows 10! Even better driver support! Well, my Adaptec SCSI controller not supported, but that's irrelevant! Who cares about harddisks? Maybe Microsoft hates Adaptec. Yet otherwise, everything's there.
 
 Now imagine - going from Win10 to Linux! Linux! Realtec r8168 driver? Not provided. NOT PROVIDED? What the hell? 21st century out there, damn it! Download off Realtek. Realtek pages are constantly down, damn it! Get it from Github. Compile. Or get from Ubuntu. It still needs compilation. So compiling. Freezes. Constant disk access, harddisk indicator constantly flashing, yet nothing happens. What the hell is going on? Not even a cryptic error? Nothing? Turns out, not enough memory (was compiling on virtual machine, for compilation purposes, increase RAM to like 320 MB minumum). All right, working.
 
@@ -788,7 +788,7 @@ Dmesg?
 
 All right, so I can "dpkg --purge" any AppArmor crap packages, right? Well, suffice to say, it's a good idea to try such stuff in a virtual machine. You do have a snapshot, do you? What's up with this security bullshit, anyway? Why is AppArmor still loaded, if it's disabled? Why can't I purge this crap?
 
-HFS+ support on Ubuntu is increeedible! You have a feeling you are using a mac! Total support for the file system!
+HFS+ support on Ubuntu is increeedible! You have a feeling you are using a mac! Great support for this file system!
 
 	unknown filesystem type 'hfsplus'
 
