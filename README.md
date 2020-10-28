@@ -716,7 +716,7 @@ Stackoverflow, superuser, anybody, HEEEEELP!
 
 But this is stupid! Well, still better than Grub. That's some consolation.
 
-So all right, it booted. Two days later, "boot sector failure". Re-wrote MBR to usb drive, rebooted, working again. A week later, boot sector failure. And so on. No idea what causes this. Do I have to re-write the MBR every time I modify the ext4 partition of the usb drive? Or is it the changes to the partition syslinux resides on that causes this? Syslinux?
+So all right, it booted. Two days later, "boot sector failure". Executed the syslinux command again, updating "c:\ubuntu.bin" (above), rebooted, working again. A week later, boot sector failure. And so on. No idea what causes this. Do I have to re-write the MBR every time I modify the ext4 partition of the usb drive? Or is it the changes to the partition syslinux resides on that causes this? Syslinux?
 
 	BLAAAAAAAAAAAAAAAAA!
 
@@ -754,7 +754,7 @@ Now some words on hardware support in linux. I already spoke about the wonderful
 
 Now imagine - going from Win10 to Linux! Linux! Realtec r8168 driver? Not provided. NOT PROVIDED? What the hell? 21st century out there, damn it! Download off Realtek. Realtek pages are constantly down, damn it! Get it from Github. Compile. Or get from Ubuntu. It still needs compilation. So compiling. Freezes. Constant disk access, harddisk indicator constantly flashing, yet nothing happens. What the hell is going on? Not even a cryptic error? Nothing? Turns out, not enough memory (was compiling on virtual machine, for compilation purposes, increase RAM to like 320 MB minumum). All right, working.
 
-Now I got this wonderfull all-cheap Realtek network card from Amazon, r8169 chip. Ubuntu?
+Now I got this wonderful all-cheap Realtek network card from Amazon, r8169 chip. Ubuntu?
 
 Ubuntu:
 
@@ -857,7 +857,7 @@ While working with bash, I always type "cls" when switching from Windows to linu
 
 	alias cls='clear'
 
-Now some final words about the wonderful *in-built* network support of this **server** version. Now mind it, I said, I expect even a minimal installation to favour network programmes and to install them. **Server** edition, right? So I already mentioned davfs2.
+Now some final words about the wonderful **in-built** network support of this **server** version. Now mind it, I said, I expect even a minimal installation to favour network programmes and to install them. **Server** edition, right? So I already mentioned davfs2.
 
 radvdump? nada
 
